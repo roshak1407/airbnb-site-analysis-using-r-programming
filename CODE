@@ -1,0 +1,137 @@
+#importing data
+data1<-read.csv("C:/Users/Dell/Downloads/maindata.csv")
+data1
+View(data1)
+#handling missing values(NA)
+#finding na values present in every column
+colSums(is.na(data1))
+data1[which(is.na(data1$reviews_per_month)),'reviews_per_month']<-mean(data1$reviews_per_month , na.rm=TRUE)
+data1[is.na(data1)]<-0
+
+#handling outliers
+#checking for outliers
+boxplot(data1$id)
+boxplot(data1$host_id)
+###for latitude column 
+boxplot(data1$latitude,ylab='latitude',xlab='spread along x axis',col = 'red')
+
+IQR_latitude<-IQR(data1$latitude)
+IQR_latitude
+Q3<-quantile(data1$latitude)[4]
+Q3
+higher_whisker<-Q3+1.5*IQR_latitude
+higher_whisker
+data1[data1$latitude>higher_whisker,'latitude']<-higher_whisker
+Q1<-quantile(data1$latitude)[2]
+Q1
+lower_whisker<-Q1-1.5*IQR_latitude
+lower_whisker
+data1[data1$latitude<lower_whisker,'latitude']<-lower_whisker
+
+##for longitude column
+
+boxplot(data1$longitude,ylab='longitude',xlab='spread along x axis',col='yellow')
+IQR_longitude<-IQR(data1$longitude)
+IQR_longitude
+Q3<-quantile(data1$longitude)[4]
+Q3
+higher_whiskerlon<-Q3+1.5*IQR_longitude
+higher_whiskerlon
+data1[data1$longitude>higher_whiskerlon,'longitude']<-higher_whiskerlon
+Q1<-quantile(data1$longitude)[2]
+Q1
+lower_whiskerlon<-Q1-1.5*IQR_longitude
+lower_whiskerlon
+data1[data1$longitude<lower_whiskerlon,'longitude']<-lower_whiskerlon
+
+##for price column
+boxplot(data1$price,xlab='spread along x axis',ylab='price',col='blue')
+IQR_price<-IQR(data1$price)
+IQR_price
+Q3<-quantile(data1$price)[4]
+Q3
+higher_whisker<-Q3+1.5*IQR_price
+higher_whisker
+data1[data1$price>higher_whisker,'price']<-higher_whisker
+
+##for minimum nights column
+boxplot(data1$minimum_nights,xlab='spread along x axis',ylab='minimum nights',col = 'red')
+IQR_minimum_nights<-IQR(data1$minimum_nights)
+IQR_minimum_nights
+Q3_minimum_nights<-quantile(data1$minimum_nights)[4]
+Q3_minimum_nights
+higher_whisker_minimum_nights<-Q3_minimum_nights+1.5*IQR_minimum_nights
+higher_whisker_minimum_nights
+data1[data1$minimum_nights>higher_whisker_minimum_nights,'minimum_nights']<-higher_whisker_minimum_nights
+
+##for number of reviews column
+boxplot(data1$number_of_reviews,xlab='spread along x axis',yaxis='no. of reviews',col = 'pink')
+IQR_number_of_reviews<-IQR(data1$number_of_reviews)
+IQR_number_of_reviews
+Q3_number_of_reviews<-quantile(data1$number_of_reviews)[4]
+Q3_number_of_reviews
+higher_whisker_number_of_reviews<-Q3_number_of_reviews+1.5*IQR_number_of_reviews
+higher_whisker_number_of_reviews
+data1[data1$number_of_reviews>higher_whisker_number_of_reviews,'number_of_reviews']<-higher_whisker_number_of_reviews
+
+##for review per month column
+boxplot(data1$reviews_per_month,xlab='spread along x axis',ylab='no.of reviews per month',col='green')
+IQR_per_month<-IQR(data1$reviews_per_month)
+IQR_per_month
+Q3_per_month<-quantile(data1$reviews_per_month)[4]
+Q3_per_month
+higher_whisker_per_month<-Q3_per_month+1.5*IQR_per_month
+higher_whisker_per_month
+data1[data1$reviews_per_month>higher_whisker_per_month,'reviews_per_month']<-higher_whisker_per_month
+
+ ##for calculated_host_listings_count (CHLC) column
+boxplot(data1$calculated_host_listings_count,ylab='calculated_host_listing_count',col='violet')
+IQR_CHLC<-IQR(data1$calculated_host_listings_count)
+IQR_CHLC
+Q3_CHLC<-quantile(data1$calculated_host_listings_count)[4]
+Q3_CHLC
+higher_whisker_CHLC<-Q3_CHLC+1.5*IQR_CHLC
+higher_whisker_CHLC
+data1[data1$calculated_host_listings_count>higher_whisker_CHLC,'calculated_host_listings_count']<-higher_whisker_CHLC
+
+
+#for availability_365
+boxplot(data1$availability_365,ylab='availability_365',col='red')
+
+##for number_of_reviews_ltm
+boxplot(data1$number_of_reviews_ltm,ylab='number_of_reviews_ltm',col='yellow')
+IQR_item<-IQR(data1$number_of_reviews_ltm)
+IQR_item
+Q3_item<-quantile(data1$number_of_reviews_ltm)[4]
+Q3_item
+higher_whisker_item<-Q3_item+1.5*IQR_item
+high
+data1[data1$number_of_reviews_ltm>higher_whisker_item,'number_of_reviews_ltm']<-higher_whisker_item
+rm(data1$number_of_revieer_whisker_itemws_ltm)
+data1$number_of_revieer_whisker_itemws_ltm<-NULL
+ 
+##EXPLORING DATA
+summary(data1)
+
+#correlations between the data
+
+plot(data1$latitude,data1$longitude)
+correlation_latitude_longitude<-cor(data1$latitude,data1$longitude)
+correlation_latitude_longitude
+plot(data1$price,data1$minimum_nights)
+correlation_price_nights<-cor(data1$price,data1$minimum_nights)
+correlation_price_nights
+plot(data1$id,data1$host_id)
+cor_id_hostid<-cor(data1$id,data1$host_id)
+cor_id_hostid
+plot(data1$calculated_host_listings_count,data1$number_of_reviews)
+cor_CHLC_reviews<-cor(data1$calculated_host_listings_count,data1$number_of_reviews)
+cor_CHLC_reviews
+plot(data1$price,data1$number_of_reviews_ltm)
+cor_price_item<-cor(data1$price,data1$number_of_reviews_ltm)
+cor_price_item
+
+
+##
+
+
